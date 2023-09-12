@@ -20,18 +20,6 @@ public class BackendApplication implements CommandLineRunner {
 	private IProductBusiness productBusiness;
 	@Override
 	public void run(String... args) throws Exception {
-		try {
-			Product product = productBusiness.getById(1);
-			System.out.println("Product: " + product);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
 
-		try {
-			Product product = productBusiness.getByProduct("Destornillador");
-			System.out.println("Product: " + product);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
 	}
 }
