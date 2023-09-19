@@ -15,6 +15,7 @@
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
+		<tomcat.scope>runtime</tomcat.scope> <!-- runtime for war packaging, provided for jar packaging -->
 	</properties>
 	<dependencies>
 		<dependency>
@@ -62,8 +63,34 @@
 			<version>3.1.3</version>
 		</dependency>
 
+		<!-- Falta una dependencia-->
 
 	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>mysqldev</id>
+			<properties>
+				<spring.profiles.active>mysqldev</spring.profiles.active>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>mysqlprod</id>
+			<properties>
+				<spring.profiles.active>mysqlprod</spring.profiles.active>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>mysqlnube</id>
+			<properties>
+				<spring.profiles.active>mysqlnube</spring.profiles.active>
+			</properties>
+		</profile>
+
+		<!-- Falta el perfil de war-build y jar-build -->
+	</profiles>
 
 	<build>
 		<plugins>
