@@ -11,11 +11,12 @@
 	<groupId>ar.edu.iua.iw3</groupId>
 	<artifactId>backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>${packaging.type}</packaging>
 	<name>Backend</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
-		<tomcat.scope>runtime</tomcat.scope> <!-- runtime for war packaging, provided for jar packaging -->
+		<tomcat.scope>runtime</tomcat.scope>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -68,28 +69,86 @@
 	</dependencies>
 
 	<profiles>
+		<!-- Perfiles de ejecución -->
 		<profile>
 			<id>mysqldev</id>
 			<properties>
 				<spring.profiles.active>mysqldev</spring.profiles.active>
 			</properties>
 		</profile>
-
 		<profile>
 			<id>mysqlprod</id>
 			<properties>
 				<spring.profiles.active>mysqlprod</spring.profiles.active>
 			</properties>
-		</profile>
 
+		</profile>
 		<profile>
 			<id>mysqlnube</id>
 			<properties>
 				<spring.profiles.active>mysqlnube</spring.profiles.active>
 			</properties>
+
 		</profile>
 
-		<!-- Falta el perfil de war-build y jar-build -->
+
+		<!-- Perfiles de empaquetado -->
+		<profile>
+			<id>war-build</id>
+			<properties>
+				<packaging.type>war</packaging.type>
+				<tomcat.scope>provided</tomcat.scope>
+			</properties>
+			<activation>
+				<property>
+					<name>build</name>
+					<value>war</value>
+				</property>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<finalName>ROOT</finalName>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<goals>
+									<goal>repackage</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+
+		<profile>
+			<id>jar-build</id>
+			<properties>
+				<packaging.type>jar</packaging.type>
+				<tomcat.scope>compile</tomcat.scope>
+			</properties>
+			<activation>
+				<property>
+					<name>build</name>
+					<value>jar</value>
+				</property>
+			</activation>
+			<build>
+				<finalName>iw3</finalName>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+
 	</profiles>
 
 	<build>
