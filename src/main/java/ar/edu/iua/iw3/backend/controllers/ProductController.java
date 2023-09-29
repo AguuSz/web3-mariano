@@ -1,9 +1,11 @@
 package ar.edu.iua.iw3.backend.controllers;
 
+import ar.edu.iua.iw3.backend.business.ICategoryBusiness;
 import ar.edu.iua.iw3.backend.business.IProductBusiness;
 import ar.edu.iua.iw3.backend.exceptions.BusinessException;
 import ar.edu.iua.iw3.backend.exceptions.FoundException;
 import ar.edu.iua.iw3.backend.exceptions.NotFoundException;
+import ar.edu.iua.iw3.backend.model.Category;
 import ar.edu.iua.iw3.backend.model.Product;
 import ar.edu.iua.iw3.backend.util.IStandardResponseBusiness;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,5 +93,71 @@ public class ProductController extends BaseRestController {
             return new ResponseEntity<>(response.build(HttpStatus.NOT_FOUND, e, e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
+
+    // Categories
+
+    @Autowired
+    private ICategoryBusiness categoryBusiness;
+
+    @GetMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> listCategories() {
+        try {
+            return new ResponseEntity<>(categoryBusiness.getCategories(), HttpStatus.OK);
+        } catch (BusinessException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/categories/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> loadCategory(@PathVariable("id") long id) {
+        try {
+            return new ResponseEntity<>(categoryBusiness.getById(id), HttpStatus.OK);
+        } catch (BusinessException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.NOT_FOUND, e, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping(value = "/categories")
+    public ResponseEntity<?> addCategory(@RequestBody Category category) {
+        try {
+            Category response = categoryBusiness.add(category);
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("location", Constants.URL_PRODUCTS + "/categories/" + response.getId());
+            return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
+        } catch (BusinessException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (FoundException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.FOUND, e, e.getMessage()), HttpStatus.FOUND);
+        }
+    }
+
+    @PutMapping(value = "/categories")
+    public ResponseEntity<?> updateCategory(@RequestBody Category category) {
+        try {
+            return new ResponseEntity<>(categoryBusiness.update(category), HttpStatus.OK);
+        } catch (BusinessException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.NOT_FOUND, e, e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (FoundException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.FOUND, e, e.getMessage()), HttpStatus.FOUND);
+        }
+    }
+
+    @DeleteMapping(value = "/categories/{id}")
+    public ResponseEntity<?> deleteCategory(@PathVariable("id") long id) {
+        try {
+            categoryBusiness.delete(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BusinessException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.NOT_FOUND, e, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+    }
+
+
 
 }

@@ -42,7 +42,7 @@ public class ProductBusiness implements IProductBusiness{
         Optional<Product> product;
 
         try {
-            product = productDAO.findByProduct(productName);
+            product = productDAO.findOneByProduct(productName);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw BusinessException.builder().ex(e).build();

@@ -9,6 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "products")
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,6 +26,10 @@ public class Product {
     private boolean stock=true;
 
     private double price;
+
+    @ManyToOne
+    @JoinColumn(name = "id_category", nullable = true)
+    private Category category;
 
     @Override
     public String toString() {
