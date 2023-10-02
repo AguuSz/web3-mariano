@@ -76,7 +76,19 @@ public class ProductCli1Controller extends BaseRestController {
         }
     }
 
-
-
+    @PutMapping(value = "/update/{codCli1}")
+    public ResponseEntity<?> update(@PathVariable("codCli1") String codCli1, @RequestBody ProductCli1 product) {
+        try {
+            product.setCodCli1(codCli1);
+            return new ResponseEntity<>(productBusiness.update(product), HttpStatus.OK);
+        } catch (BusinessException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.INTERNAL_SERVER_ERROR, e, e.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (FoundException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.FOUND, e, e.getMessage()), HttpStatus.FOUND);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(response.build(HttpStatus.NOT_FOUND, e, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+    }
 }
 

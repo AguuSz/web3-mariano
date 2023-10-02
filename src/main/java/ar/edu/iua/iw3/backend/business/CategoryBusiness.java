@@ -92,17 +92,17 @@ public class CategoryBusiness implements ICategoryBusiness {
     public Category update(Category category) throws FoundException, NotFoundException, BusinessException {
         getById(category.getId());
 
-        Optional<Category> productFound;
+        Optional<Category> categoryFound;
 
         try {
-            productFound = repositoryDAO.findOneByCategoryAndIdNot(category.getCategory(), category.getId());
+            categoryFound = repositoryDAO.findOneByCategoryAndIdNot(category.getCategory(), category.getId());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw BusinessException.builder().ex(e).build();
         }
 
-        if (productFound.isPresent()) {
-            throw FoundException.builder().message("El category con nombre: " + category.getCategory() + " ya existe.").build();
+        if (categoryFound.isPresent()) {
+            throw FoundException.builder().message("La categoria con nombre: " + category.getCategory() + " ya existe.").build();
         }
 
         try {
