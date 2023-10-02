@@ -5,7 +5,6 @@ import ar.edu.iua.iw3.backend.exceptions.FoundException;
 import ar.edu.iua.iw3.backend.exceptions.NotFoundException;
 import ar.edu.iua.iw3.backend.model.Category;
 import ar.edu.iua.iw3.backend.persistance.CategoryRepository;
-import ar.edu.iua.iw3.backend.persistance.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,8 +90,27 @@ public class CategoryBusiness implements ICategoryBusiness {
 
     @Override
     public Category update(Category category) throws FoundException, NotFoundException, BusinessException {
-        // TODO
-        return null;
+        getById(category.getId());
+
+        Optional<Category> productFound;
+
+        try {
+            productFound = repositoryDAO.findOneByCategoryAndIdNot(category.getCategory(), category.getId());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).build();
+        }
+
+        if (productFound.isPresent()) {
+            throw FoundException.builder().message("El category con nombre: " + category.getCategory() + " ya existe.").build();
+        }
+
+        try {
+            return repositoryDAO.save(category);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).build();
+        }
     }
 
     @Override

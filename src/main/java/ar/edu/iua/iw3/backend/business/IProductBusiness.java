@@ -14,7 +14,7 @@ public interface IProductBusiness {
 
     public List<Product> getProducts() throws BusinessException;
 
-    public Product add(Product product) throws FoundException, BusinessException;
+    public Product add(Product product) throws FoundException, NotFoundException, BusinessException;
 
     public Product update(Product product) throws FoundException, NotFoundException, BusinessException;
 
