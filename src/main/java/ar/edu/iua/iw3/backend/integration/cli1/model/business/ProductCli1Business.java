@@ -60,12 +60,20 @@ public class ProductCli1Business implements IProductCli1Business {
 
         try {
             productBaseBusiness.getById(product.getId());
-            throw FoundException.builder().message("Se encontró el Producto id=" + product.getId()).build();
+            throw FoundException.builder().message("Se encontró el Producto ID: " + product.getId()).build();
         } catch (NotFoundException e) {
         }
 
-        if (productDAO.findOneByCodCli1(product.getCodCli1()).isPresent()) {
-            throw FoundException.builder().message("Se encontró el Producto código=" + product.getCodCli1()).build();
+        Optional<ProductCli1> productFoundByCod;
+        try {
+            productFoundByCod = productDAO.findOneByCodCli1(product.getCodCli1());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).build();
+        }
+
+        if (productFoundByCod.isPresent()) {
+            throw FoundException.builder().message("Se encontró el Producto código: " + product.getCodCli1()).build();
         }
 
         try {
@@ -93,6 +101,34 @@ public class ProductCli1Business implements IProductCli1Business {
 
         return add(product);
 
+    }
+
+    @Override
+    public ProductCli1 update(ProductCli1 product) throws FoundException, NotFoundException, BusinessException {
+        try {
+            productBaseBusiness.getById(product.getId());
+        } catch (NotFoundException e) {
+            throw NotFoundException.builder().message("No se encuentra el Producto ID: " + product.getId()).build();
+        }
+
+        Optional<ProductCli1> productFoundByCod;
+        try {
+            productFoundByCod = productDAO.findOneByCodCli1(product.getCodCli1());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).build();
+        }
+
+        if (productFoundByCod.isPresent()) {
+            throw FoundException.builder().message("Se encontró el Producto código: " + product.getCodCli1()).build();
+        }
+
+        try {
+            return productDAO.save(product);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw BusinessException.builder().ex(e).build();
+        }
     }
 
 }
