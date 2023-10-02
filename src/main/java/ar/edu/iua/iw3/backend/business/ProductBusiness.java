@@ -75,13 +75,13 @@ public class ProductBusiness implements IProductBusiness{
         try {
             getById(product.getId());
             throw FoundException.builder().message("El producto con ID: " + product.getId() + " ya existe.").build();
-        } catch (NotFoundException e) {
+        } catch (Exception e) {
 
         }
         try {
             getByProduct(product.getProduct());
             throw FoundException.builder().message("El producto con nombre: " + product.getProduct() + " ya existe.").build();
-        } catch (NotFoundException e) {
+        } catch (Exception e) {
 
         }
 
