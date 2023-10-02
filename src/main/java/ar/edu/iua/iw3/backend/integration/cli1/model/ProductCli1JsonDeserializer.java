@@ -3,6 +3,7 @@ package ar.edu.iua.iw3.backend.integration.cli1.model;
 import ar.edu.iua.iw3.backend.business.ICategoryBusiness;
 import ar.edu.iua.iw3.backend.exceptions.BusinessException;
 import ar.edu.iua.iw3.backend.exceptions.NotFoundException;
+import ar.edu.iua.iw3.backend.util.DeserializerConstants;
 import ar.edu.iua.iw3.backend.util.JsonUtiles;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
@@ -32,17 +33,17 @@ public class ProductCli1JsonDeserializer extends StdDeserializer<ProductCli1> {
         ProductCli1 r = new ProductCli1();
         JsonNode node = jp.getCodec().readTree(jp);
 
-        String code = JsonUtiles.getString(node, "product_code,code_product,code".split(","),
+        String code = JsonUtiles.getString(node, DeserializerConstants.DEFAULT_CODES,
                 System.currentTimeMillis() + "");
         String productDesc = JsonUtiles.getString(node,
-                "product,description,product_description,product_name".split(","), null);
-        double price = JsonUtiles.getDouble(node, "product_price,price_product,price".split(","), 0);
-        boolean stock = JsonUtiles.getBoolean(node, "stock,in_stock".split(","), false);
+                DeserializerConstants.DEFAULT_DESCRIPTIONS, null);
+        double price = JsonUtiles.getDouble(node, DeserializerConstants.DEFAULT_PRICES, 0);
+        boolean stock = JsonUtiles.getBoolean(node, DeserializerConstants.DEFAULT_STOCKS, false);
         r.setCodCli1(code);
         r.setProduct(productDesc);
         r.setPrice(price);
         r.setStock(stock);
-        String categoryName = JsonUtiles.getString(node, "category,product_category,category_product".split(","), null);
+        String categoryName = JsonUtiles.getString(node, DeserializerConstants.DEFAULT_CATEGORIES, null);
         if (categoryName != null) {
             try {
                 r.setCategory(categoryBusiness.getByCategory(categoryName));
