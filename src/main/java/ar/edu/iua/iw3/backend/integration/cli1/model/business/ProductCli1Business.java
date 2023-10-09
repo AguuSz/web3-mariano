@@ -58,10 +58,12 @@ public class ProductCli1Business implements IProductCli1Business {
     @Override
     public ProductCli1 add(ProductCli1 product) throws FoundException, BusinessException {
 
+        System.out.println(product);
+
         try {
             productBaseBusiness.getById(product.getId());
             throw FoundException.builder().message("Se encontró el Producto ID: " + product.getId()).build();
-        } catch (NotFoundException e) {
+        } catch (Exception e) {
         }
 
         Optional<ProductCli1> productFoundByCod;
@@ -94,6 +96,7 @@ public class ProductCli1Business implements IProductCli1Business {
         ProductCli1 product = null;
         try {
             product = mapper.readValue(json, ProductCli1.class);
+            System.out.println(product);
         } catch (JsonProcessingException e) {
             log.error(e.getMessage(), e);
             throw BusinessException.builder().ex(e).build();
