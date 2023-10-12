@@ -5,17 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -76,10 +66,19 @@ public class User implements UserDetails {
     private String username;
     private String password;
 
+//    Tarea
+    private String name;
+    private String lastname;
+
+    @ElementCollection(targetClass = String.class)
+    @CollectionTable(name = "phones", joinColumns = @JoinColumn(name = "idUser"))
+    @Column(name = "phone", nullable = false)
+    private List<String> phones;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "userroles", joinColumns = {
-            @JoinColumn(name = "id_user", referencedColumnName = "id_user") }, inverseJoinColumns = {
-            @JoinColumn(name = "id_role", referencedColumnName = "id") })
+            @JoinColumn(name = "idUser", referencedColumnName = "idUser") }, inverseJoinColumns = {
+            @JoinColumn(name = "idRole", referencedColumnName = "id") })
     private Set<Role> roles;
 
     @Transient

@@ -62,10 +62,15 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                     .build()
                     .verify(token);
 
-            log.trace("Token recibido por '{}'", byHeader ? "header" : "param");
-            log.trace("Usuario logueado: " + jwt.getSubject());
-            log.trace("Roles: " + jwt.getClaim("roles"));
-            log.trace("Custom JWT Version: " + jwt.getClaim("version").asString());
+            log.info("Token recibido por '{}'", byHeader ? "header" : "param");
+            log.info("Usuario logueado: " + jwt.getSubject());
+            log.info("Roles: " + jwt.getClaim("roles"));
+            log.info("Custom JWT Version: " + jwt.getClaim("version").asString());
+
+            log.info("User name: " + jwt.getClaim("name").asString());
+            log.info("User lastname: " + jwt.getClaim("lastname").asString());
+            log.info("User fullname: " + jwt.getClaim("fullName").asString());
+            log.info("Custom JWT Version: " + jwt.getClaim("version").asString());
 
             List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
             try {

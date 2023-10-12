@@ -41,6 +41,8 @@ public class AuthRestController extends BaseRestController {
         User user = (User) auth.getPrincipal();
         String token = JWT.create().withSubject(user.getUsername())
                 .withClaim("roles", new ArrayList<String>(user.getAuthoritiesStr())).withClaim("email", user.getEmail())
+                .withClaim("name", user.getName()).withClaim("lastname", user.getLastname())
+                .withClaim("fullName", user.getName() + " " + user.getLastname())
                 .withClaim("version", "1.0.0")
                 .withExpiresAt(new Date(System.currentTimeMillis() + AuthConstants.EXPIRATION_TIME))
                 .sign(Algorithm.HMAC512(AuthConstants.SECRET.getBytes()));
